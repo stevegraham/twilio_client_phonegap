@@ -13,12 +13,17 @@ var TwilioPlugin = {
 TwilioPlugin.Device.prototype.setup = function(token) {
     // Take a token and instantiate a new device object
     var self = this;
-    var success = function(callback) {
-        var connection = new Twilio.Connection();
-        if(self.delegate[callback]) self.delegate[callback](connection);
+    
+    var error = function(callback) {
+    
     }
     
-    Cordova.exec(success, null, "TCPlugin", "deviceSetup", [token]);
+    var success = function(callback) {
+        var argument = callback['arguments'] || new Twilio.Connection();
+        if(self.delegate[callback['callback']]) self.delegate[callback['callback']](argument);
+    }
+    
+    Cordova.exec(success, error, "TCPlugin", "deviceSetup", [token]);
 }
 
 // polymorphic function. if called with function as an argument, the function is invoked
@@ -32,8 +37,7 @@ TwilioPlugin.Device.prototype.connect = function(argument) {
 }
 
 TwilioPlugin.Device.prototype.disconnectAll = function() {
-    alert('disconnect');
-    Cordova.exec('TCPlugin.disconnectAll');
+	Cordova.exec('TCPlugin.disconnectAll');
 }
 
 TwilioPlugin.Device.prototype.disconnect = function(fn) {
@@ -65,7 +69,7 @@ TwilioPlugin.Device.prototype.presence = function(fn) {
 }
 
 TwilioPlugin.Device.prototype.status = function() {
-
+	
 }
 
 TwilioPlugin.Device.prototype.sounds = {
