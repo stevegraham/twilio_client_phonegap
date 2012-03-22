@@ -29,8 +29,15 @@
 -(void)connectionDidDisconnect:(TCConnection*)connection;
 
 # pragma mark javascript mapper methods
--(void)deviceSetup:(NSArray *)arguments withDict:(NSMutableDictionary *)options;
+-(void)deviceSetup:(NSMutableArray *)arguments withDict:(NSMutableDictionary *)options;
 -(void)connect:(NSArray *)arguments withDict:(NSMutableDictionary *)options;
 -(void)disconnectAll:(NSArray *)arguments withDict:(NSMutableDictionary *)options;
+-(void)acceptConnection:(NSArray *)arguments withDict:(NSMutableDictionary *)options;
+-(void)disconnectConnection:(NSArray *)arguments withDict:(NSMutableDictionary *)options;
+-(void)muteConnection:(NSArray *)arguments withDict:(NSMutableDictionary *)options;
+-(void)sendDigits:(NSMutableArray *)arguments withDict:(NSMutableDictionary *)options;
+
+-(NSString *)deviceStatus:(NSArray *)arguments withDict:(NSMutableDictionary *)options;
+-(NSString *)connectionStatus:(NSArray *)arguments withDict:(NSMutableDictionary *)options;
 
 @end

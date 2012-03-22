@@ -30,6 +30,7 @@
 @synthesize connection = _connection;
 
 # pragma mark device delegate method
+
 -(void)device:(TCDevice *)device didStopListeningForIncomingConnections:(NSError *)error {
     [self javascriptErrorback:error];
 }
@@ -39,7 +40,7 @@
 }
 
 -(void)device:(TCDevice *)device didReceivePresenceUpdate:(TCPresenceEvent *)presenceEvent {
-    NSDictionary *object = [NSDictionary dictionaryWithObjectsAndKeys:[presenceEvent name], @"from", [presenceEvent isAvailable], nil];
+    NSDictionary *object = [NSDictionary dictionaryWithObjectsAndKeys:[presenceEvent name], @"from", [presenceEvent isAvailable], @"available", nil];
     [self javascriptCallback:@"onpresence" withArguments:[NSArray arrayWithObject:object]];
 }
 
@@ -48,6 +49,7 @@
 }
 
 # pragma mark connection delegate methods
+
 -(void)connection:(TCConnection*)connection didFailWithError:(NSError*)error {
     [self javascriptErrorback:error];
 }
@@ -60,14 +62,16 @@
 -(void)connectionDidConnect:(TCConnection*)connection {
     self.connection = connection;
     [self javascriptCallback:@"onconnect"];
+    if([connection isIncoming]) [self javascriptCallback:@"onaccept"];
 }
 
 -(void)connectionDidDisconnect:(TCConnection*)connection {
     self.connection = connection;
-    [self javascriptCallback:@"ondisconnect"];
+    [self javascriptCallback:@"ondevicedisconnect"];
+    [self javascriptCallback:@"onconnectiondisconnect"];
 }
 
-# pragma mark javascript mapper methods
+# pragma mark javascript device mapper methods
 
 -(void)deviceSetup:(NSMutableArray *)arguments withDict:(NSMutableDictionary*)options {
     self.callback = [arguments pop];
@@ -81,13 +85,85 @@
     [self javascriptCallback:@"onready"];
 }
 
--(void)connect:(NSMutableArray *)arguments withDict:(NSMutableDictionary *)options {
+-(void)connect:(NSArray *)arguments withDict:(NSMutableDictionary *)options {
     [self.device connect:options delegate:self];
 }
 
--(void)disconnectAll:(NSMutableArray *)arguments withDict:(NSMutableDictionary *)options {
+-(void)disconnectAll:(NSArray *)arguments withDict:(NSMutableDictionary *)options {
     [self.device disconnectAll];
 }
+
+-(NSString *)deviceStatus:(NSArray *)arguments withDict:(NSMutableDictionary *)options {
+    NSString *state;
+    switch ([self.device state]) {
+        case TCDeviceStateBusy:
+            state = @"busy";
+            break;
+            
+        case TCDeviceStateReady:
+            state = @"ready";
+            break;
+            
+        case TCDeviceStateOffline:
+            state = @"offline";
+            break;
+            
+        default:
+            break;        
+    }
+    
+    return state;
+}
+
+
+# pragma mark javascript connection mapper methods
+
+-(void)acceptConnection:(NSArray *)arguments withDict:(NSMutableDictionary *)options {
+    [self.connection accept];
+}
+
+-(void)disconnectConnection:(NSArray *)arguments withDict:(NSMutableDictionary *)options {
+    [self.connection disconnect];
+}
+
+-(void)muteConnection:(NSArray *)arguments withDict:(NSMutableDictionary *)options {
+    if(self.connection.isMuted) {
+        self.connection.muted = NO;
+    } else {
+        self.connection.muted = YES;
+    }
+}
+
+-(void)sendDigits:(NSMutableArray *)arguments withDict:(NSMutableDictionary *)options {
+    [self.connection sendDigits:[arguments pop]];
+}
+
+-(NSString *)connectionStatus:(NSArray *)arguments withDict:(NSMutableDictionary *)options {
+    NSString *state;
+    switch ([self.connection state]) {
+        case TCConnectionStateConnected:
+            state = @"open";
+            break;
+            
+        case TCConnectionStateConnecting:
+            state = @"connecting";
+            break;
+            
+        case TCConnectionStatePending:
+            state = @"pending";
+            break;
+            
+        case TCConnectionStateDisconnected:
+            state = @"closed";
+        
+        default:
+            break;        
+    }
+    
+    return state;
+}
+
+# pragma mark private methods
 
 -(void)javascriptCallback:(NSString *)event withArguments:(NSArray *)arguments {
     NSDictionary *options   = [NSDictionary dictionaryWithObjectsAndKeys:event, @"callback", arguments, @"arguments", nil];

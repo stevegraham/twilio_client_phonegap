@@ -13,7 +13,7 @@
     TwilioPlugin.Device.prototype.setup = function(token) {
         // Take a token and instantiate a new device object
         var error = function(callback) {
-
+            // TODO: implement this
         }
 
         var success = function(callback) {
@@ -35,12 +35,11 @@
     }
 
     TwilioPlugin.Device.prototype.disconnectAll = function() {
-        alert('disconnect');
         Cordova.exec('TCPlugin.disconnectAll');
     }
 
     TwilioPlugin.Device.prototype.disconnect = function(fn) {
-        delegate['ondisconnect'] = fn;
+        delegate['ondevicedisconnect'] = fn;
     }
 
     TwilioPlugin.Device.prototype.ready = function(fn) {
@@ -68,9 +67,10 @@
     }
 
     TwilioPlugin.Device.prototype.status = function() {
+        var status = Cordova.exec("TCPlugin.deviceStatus");
+    }
 
-        }
-
+    // Noops until I figure out why the hell using sounds in Phonegap gives EXC_BAD_ACCESS
     TwilioPlugin.Device.prototype.sounds = {
         incoming: function(boolean) {},
         outgoing: function(boolean) {},
@@ -81,23 +81,41 @@
         if (typeof(argument) == 'function') {
             delegate['onaccept'] = argument;
         } else {
-            Cordova.exec("TCPlugin.acceptConnection")
+            Cordova.exec("TCPlugin.acceptConnection");
         }
     }
 
-    TwilioPlugin.Connection.prototype.reject = function(fn) {}
+    TwilioPlugin.Connection.prototype.reject = function() {
+        Cordova.exec("TCPlugin.rejectConnection");
+    }
 
-    TwilioPlugin.Connection.prototype.disconnect = function(fn) {}
+    TwilioPlugin.Connection.prototype.disconnect = function(fn) {
+        if (typeof(argument) == 'function') {
+            delegate['onconnectiondisconnect'] = argument;
+        } else {
+            Cordova.exec("TCPlugin.disconnectConnection");
+        }
+    }
 
-    TwilioPlugin.Connection.prototype.error = function(fn) {}
+    TwilioPlugin.Connection.prototype.error = function(fn) {
+        delegate['onconnectionerror'] = fn;
+    }
 
-    TwilioPlugin.Connection.prototype.mute = function() {}
+    TwilioPlugin.Connection.prototype.mute = function() {
+        Cordova.exec("TCPlugin.muteConnection");
+    }
 
-    TwilioPlugin.Connection.prototype.unmute = function() {}
+    TwilioPlugin.Connection.prototype.unmute = function() {
+        Cordova.exec("TCPlugin.muteConnection");
+    }
 
-    TwilioPlugin.Connection.prototype.sendDigits = function(string) {}
+    TwilioPlugin.Connection.prototype.sendDigits = function(string) {
+        Cordova.exec("TCPlugin.sendDigits", string);
+    }
 
-    TwilioPlugin.Connection.prototype.status = function() {}
+    TwilioPlugin.Connection.prototype.status = function() {
+        return Cordova.exec("TCPlugin.deviceStatus");
+    }
 
     TwilioPlugin.install = function() {
         if (!window.Twilio) window.Twilio = {};
