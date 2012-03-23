@@ -12,8 +12,9 @@
 
     TwilioPlugin.Device.prototype.setup = function(token) {
         // Take a token and instantiate a new device object
-        var error = function(callback) {
-            // TODO: implement this
+        var error = function(error) {
+            if(delegate['ondeviceerror']) delegate['ondeviceerror'](error)
+            if(delegate['onconnectionerror']) delegate['onconnectionerror'](error)
         }
 
         var success = function(callback) {
@@ -59,7 +60,7 @@
     }
 
     TwilioPlugin.Device.prototype.error = function(fn) {
-        delegate['onerror'] = fn;
+        delegate['ondeviceerror'] = fn;
     }
 
     TwilioPlugin.Device.prototype.presence = function(fn) {
@@ -113,8 +114,8 @@
         Cordova.exec("TCPlugin.sendDigits", string);
     }
 
-    TwilioPlugin.Connection.prototype.status = function() {
-        return Cordova.exec("TCPlugin.deviceStatus");
+    TwilioPlugin.Connection.prototype.status = function(fn) {
+        Cordova.exec(fn, null, "TCPlugin", "connectionStatus", []);
     }
 
     TwilioPlugin.install = function() {

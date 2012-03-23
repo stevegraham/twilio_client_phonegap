@@ -21,12 +21,14 @@
 -(void)device:(TCDevice*)device didReceiveIncomingConnection:(TCConnection*)connection;
 -(void)device:(TCDevice *)device didReceivePresenceUpdate:(TCPresenceEvent *)presenceEvent;
 -(void)deviceDidStartListeningForIncomingConnections:(TCDevice*)device;
+-(void)deviceStatus:(NSMutableArray *)arguments withDict:(NSMutableDictionary *)options;
 
 # pragma mark connection delegate methods
 -(void)connection:(TCConnection*)connection didFailWithError:(NSError*)error;
 -(void)connectionDidStartConnecting:(TCConnection*)connection;
 -(void)connectionDidConnect:(TCConnection*)connection;
 -(void)connectionDidDisconnect:(TCConnection*)connection;
+-(void)connectionStatus:(NSMutableArray *)arguments withDict:(NSMutableDictionary *)options;
 
 # pragma mark javascript mapper methods
 -(void)deviceSetup:(NSMutableArray *)arguments withDict:(NSMutableDictionary *)options;
@@ -36,8 +38,5 @@
 -(void)disconnectConnection:(NSArray *)arguments withDict:(NSMutableDictionary *)options;
 -(void)muteConnection:(NSArray *)arguments withDict:(NSMutableDictionary *)options;
 -(void)sendDigits:(NSMutableArray *)arguments withDict:(NSMutableDictionary *)options;
-
--(NSString *)deviceStatus:(NSArray *)arguments withDict:(NSMutableDictionary *)options;
--(NSString *)connectionStatus:(NSArray *)arguments withDict:(NSMutableDictionary *)options;
 
 @end

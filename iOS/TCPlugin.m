@@ -18,7 +18,7 @@
 @property(atomic, strong)    TCConnection *connection;
 
 -(void)javascriptCallback:(NSString *)event;
--(void)javascriptCallback:(NSString *)event withArguments:(NSArray *)arguments;
+-(void)javascriptCallback:(NSString *)event withArguments:(NSDictionary *)arguments;
 -(void)javascriptErrorback:(NSError *)error;
 
 @end
@@ -40,8 +40,9 @@
 }
 
 -(void)device:(TCDevice *)device didReceivePresenceUpdate:(TCPresenceEvent *)presenceEvent {
-    NSDictionary *object = [NSDictionary dictionaryWithObjectsAndKeys:[presenceEvent name], @"from", [presenceEvent isAvailable], @"available", nil];
-    [self javascriptCallback:@"onpresence" withArguments:[NSArray arrayWithObject:object]];
+    NSString *available = [NSString stringWithFormat:@"%d", presenceEvent.isAvailable];
+    NSDictionary *object = [NSDictionary dictionaryWithObjectsAndKeys:presenceEvent.name, @"from", available, @"available", nil];
+    [self javascriptCallback:@"onpresence" withArguments:object];
 }
 
 -(void)deviceDidStartListeningForIncomingConnections:(TCDevice *)device {
@@ -93,7 +94,7 @@
     [self.device disconnectAll];
 }
 
--(NSString *)deviceStatus:(NSArray *)arguments withDict:(NSMutableDictionary *)options {
+-(void)deviceStatus:(NSMutableArray *)arguments withDict:(NSMutableDictionary *)options {
     NSString *state;
     switch ([self.device state]) {
         case TCDeviceStateBusy:
@@ -112,7 +113,8 @@
             break;        
     }
     
-    return state;
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:state];    
+    [self performSelectorOnMainThread:@selector(writeJavascript:) withObject:[result toSuccessCallbackString:[arguments pop]] waitUntilDone:NO];
 }
 
 
@@ -138,7 +140,7 @@
     [self.connection sendDigits:[arguments pop]];
 }
 
--(NSString *)connectionStatus:(NSArray *)arguments withDict:(NSMutableDictionary *)options {
+-(void)connectionStatus:(NSMutableArray *)arguments withDict:(NSMutableDictionary *)options {
     NSString *state;
     switch ([self.connection state]) {
         case TCConnectionStateConnected:
@@ -159,13 +161,14 @@
         default:
             break;        
     }
-    
-    return state;
+        
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:state];    
+    [self performSelectorOnMainThread:@selector(writeJavascript:) withObject:[result toSuccessCallbackString:[arguments pop]] waitUntilDone:NO];
 }
 
 # pragma mark private methods
 
--(void)javascriptCallback:(NSString *)event withArguments:(NSArray *)arguments {
+-(void)javascriptCallback:(NSString *)event withArguments:(NSDictionary *)arguments {
     NSDictionary *options   = [NSDictionary dictionaryWithObjectsAndKeys:event, @"callback", arguments, @"arguments", nil];
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:options];
     result.keepCallback     = [NSNumber numberWithBool:YES];
