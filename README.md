@@ -28,6 +28,7 @@ becomes:
 Twilio.Device.connect(function(connection) {
     connection.status(function(status) { alert(status) });
 })
+```
 
 Twilio Client documentation: http://www.twilio.com/docs/client/twilio-js
 
