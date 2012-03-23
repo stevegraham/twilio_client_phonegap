@@ -1,8 +1,12 @@
 # Twilio Client Phonegap plugins
 
-This is a Phonegap plugin that exposes the same JS API as Twilio Client for web, meaning you should be able to use the same Twilio Client code from your web application inside of your Phonegap application. 
+This is a Phonegap plugin that exposes the same JS API as Twilio Client for web as much as possible, meaning you should be able to use the same Twilio Client code from your web application inside of your Phonegap application with few if any modifications. 
 
-To use copy the Objective-C files into the `plugins` directory of your Phonegap project, and the JavaScript file into the `www` directory.
+##Instructions
+
+- Follow the instructions in the iOS client quickstart, e.g. copy headers and static lib into your xcode project, link required frameworks, linker flags, etc.
+- Copy the Objective-C files into the `plugins` directory of your Phonegap project, and the JavaScript file into the `www` directory.
+- Add a new plugin dictionary item in Cordova.plist, key: TCPlugin, value: TCPlugin.
 
 ## Limitations
 
