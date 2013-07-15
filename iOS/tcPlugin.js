@@ -31,7 +31,7 @@
         if (typeof(argument) == 'function') {
             delegate['onconnect'] = argument;
         } else if (typeof(argument) == 'object') {
-            Cordova.exec("TCPlugin.connect", argument)
+            Cordova.exec(null,null,"TCPlugin","connect", [argument])
         }
     }
 
@@ -123,7 +123,6 @@
         if (!window.Twilio.Device) window.Twilio.Device = new TwilioPlugin.Device();
         if (!window.Twilio.Connection) window.Twilio.Connection = TwilioPlugin.Connection;
     }
-
-    Cordova.addConstructor(TwilioPlugin.install);
+ TwilioPlugin.install();
 
 })()

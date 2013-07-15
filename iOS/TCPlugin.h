@@ -8,11 +8,8 @@
 #import <Foundation/Foundation.h>
 #import "TwilioClient.h"
 
-#ifdef CORDOVA_FRAMEWORK
-#import <Cordova/CDVPlugin.h>
-#else
-#import "CDVPlugin.h"
-#endif
+#import <Cordova/CDV.h>
+
 
 @interface TCPlugin : CDVPlugin <TCDeviceDelegate, TCConnectionDelegate> { }
 
