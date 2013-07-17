@@ -93,9 +93,18 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 		} else if ("connect".equals(action)) {
 			connect(args, callbackContext);
 			return true;
+		} else if ("disconnectAll".equals(action)) {
+			disconnectAll(args, callbackContext);
+			return true;
+		} else if ("acceptConnection".equals(action)) {
+			acceptConnection(args, callbackContext);
+			return true;
+		} else if ("disconnectConnection".equals(action)) {
+			disconnectConnection(args, callbackContext);
+			return true;
 		}
 
-		return false;
+		return false; 
 	}
 
 	/**
@@ -163,6 +172,21 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 			map.put(key, object.optString(key));
 		}
 		return map;
+	}
+	
+	private void disconnectAll(JSONArray arguments, CallbackContext callbackContext) {
+		mDevice.disconnectAll();
+		callbackContext.success();
+	}
+	
+	private void acceptConnection(JSONArray arguments, CallbackContext callbackContext) {
+		mConnection.accept();
+		callbackContext.success();
+	}
+	
+	private void disconnectConnection(JSONArray arguments, CallbackContext callbackContext) {
+		mConnection.disconnect();
+		callbackContext.success();
 	}
 
 	// DeviceListener methods
