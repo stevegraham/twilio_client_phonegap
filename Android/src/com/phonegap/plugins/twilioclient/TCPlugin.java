@@ -32,6 +32,8 @@ import com.twilio.client.Twilio.InitListener;
  * Twilio Client Plugin for Cordova/PhoneGap Targeted at version 2.9 for
  * compatibility
  * 
+ * 
+ * 
  * @see https://github.com/stevegraham/twilio_client_phonegap
  * @author Jeff Linwood, https://github.com/jefflinwood
  * 
@@ -120,11 +122,6 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 			return;
 		}
 		mDevice = Twilio.createDevice(arguments.optString(0), this);
-
-		// sounds disabled in iOS version, TODO: fix it here
-		mDevice.setIncomingSoundEnabled(false);
-		mDevice.setOutgoingSoundEnabled(false);
-		mDevice.setDisconnectSoundEnabled(false);
 
 		// handle incoming phone requests
 		// 1) configure Twilio
@@ -297,9 +294,21 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 
 	private void fireDocumentEvent(String eventName) {
 		if (eventName != null) {
-			webView.loadUrl("javascript:cordova.fireDocumentEvent('"
+			webView.sendJavascript("cordova.fireDocumentEvent('"
 					+ eventName + "');");
 		}
 	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		//lifecycle events
+		LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(cordova
+				.getActivity());
+		lbm.unregisterReceiver(mBroadcastReceiver);
+	}
+	
+
+	
 
 }
