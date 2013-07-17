@@ -36,7 +36,7 @@
     }
 
     TwilioPlugin.Device.prototype.disconnectAll = function() {
-        Cordova.exec('TCPlugin.disconnectAll');
+        Cordova.exec(null,null,"TCPlugin","disconnectAll",[]);
     }
 
     TwilioPlugin.Device.prototype.disconnect = function(fn) {
@@ -68,7 +68,7 @@
     }
 
     TwilioPlugin.Device.prototype.status = function() {
-        var status = Cordova.exec("TCPlugin.deviceStatus");
+        var status = Cordova.exec(null,null,"TCPlugin","deviceStatus",[]);
     }
 
     // Noops until I figure out why the hell using sounds in Phonegap gives EXC_BAD_ACCESS
@@ -82,19 +82,19 @@
         if (typeof(argument) == 'function') {
             delegate['onaccept'] = argument;
         } else {
-            Cordova.exec("TCPlugin.acceptConnection");
+            Cordova.exec(null,null,"TCPlugin","acceptConnection",[]);
         }
     }
 
     TwilioPlugin.Connection.prototype.reject = function() {
-        Cordova.exec("TCPlugin.rejectConnection");
+        Cordova.exec(null,null,"TCPlugin","rejectConnection",[]);
     }
 
     TwilioPlugin.Connection.prototype.disconnect = function(fn) {
         if (typeof(argument) == 'function') {
             delegate['onconnectiondisconnect'] = argument;
         } else {
-            Cordova.exec("TCPlugin.disconnectConnection");
+            Cordova.exec(null,null,"TCPlugin","disconnectConnection",[]);
         }
     }
 
@@ -103,15 +103,15 @@
     }
 
     TwilioPlugin.Connection.prototype.mute = function() {
-        Cordova.exec("TCPlugin.muteConnection");
+        Cordova.exec(null,null,"TCPlugin","muteConnection",[]);
     }
 
     TwilioPlugin.Connection.prototype.unmute = function() {
-        Cordova.exec("TCPlugin.muteConnection");
+        Cordova.exec(null,null,"TCPlugin","muteConnection",[]);
     }
 
     TwilioPlugin.Connection.prototype.sendDigits = function(string) {
-        Cordova.exec("TCPlugin.sendDigits", string);
+        Cordova.exec(null,null,"TCPlugin","sendDigits", [string]);
     }
 
     TwilioPlugin.Connection.prototype.status = function(fn) {
