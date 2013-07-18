@@ -3,6 +3,7 @@ package com.phonegap.plugins.twilioclient;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.cordova.api.CallbackContext;
 import org.apache.cordova.api.CordovaPlugin;
@@ -55,7 +56,13 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 			mConnection = intent.getParcelableExtra(Device.EXTRA_CONNECTION);
 			Log.d(TAG, "incoming intent received with connection: "
 					+ mConnection.getState().name());
-			fireDocumentEvent("onincoming");
+			JSONObject connection = new JSONObject();
+			try {
+				connection.putOpt("parameters", getJSONObject(mConnection.getParameters()));
+			} catch (JSONException e) {
+				Log.e(TAG,e.getLocalizedMessage(), e);
+			}
+			TCPlugin.this.javascriptCallback("onincoming", connection, mInitCallbackContext);
 		}
 	};
 
@@ -102,6 +109,12 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 		} else if ("disconnectConnection".equals(action)) {
 			disconnectConnection(args, callbackContext);
 			return true;
+		} else if ("sendDigits".equals(action)) {
+			sendDigits(args, callbackContext);
+			return true;
+		} else if ("muteConnection".equals(action)) {
+			muteConnection(callbackContext);
+			return true;
 		}
 
 		return false; 
@@ -119,12 +132,10 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 	/**
 	 * Set up the Twilio device with a capability token
 	 * 
-	 * @param arguments
-	 *            JSONArray with a callback and a Twilio capability token
+	 * @param arguments JSONArray with a Twilio capability token
 	 */
 	private void deviceSetup(JSONArray arguments,
 			CallbackContext callbackContext) {
-		Log.d(TAG, arguments.optString(0));
 		if (arguments == null || arguments.length() < 1) {
 			callbackContext.sendPluginResult(new PluginResult(
 					PluginResult.Status.ERROR));
@@ -174,6 +185,19 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 		return map;
 	}
 	
+	// helper method to get a JSONObject from a Map of Strings
+	public JSONObject getJSONObject(Map<String, String> map) throws JSONException {
+		if (map == null) {
+			return null;
+		}
+
+		JSONObject json = new JSONObject();
+		for (String key : map.keySet()) {
+			json.putOpt(key, map.get(key));
+		}
+		return json;
+	}
+	
 	private void disconnectAll(JSONArray arguments, CallbackContext callbackContext) {
 		mDevice.disconnectAll();
 		callbackContext.success();
@@ -181,7 +205,7 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 	
 	private void acceptConnection(JSONArray arguments, CallbackContext callbackContext) {
 		mConnection.accept();
-		callbackContext.success();
+		callbackContext.success(); 
 	}
 	
 	private void disconnectConnection(JSONArray arguments, CallbackContext callbackContext) {
@@ -189,18 +213,43 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 		callbackContext.success();
 	}
 
+	private void sendDigits(JSONArray arguments,
+			CallbackContext callbackContext) {
+		if (arguments == null || arguments.length() < 1 || mConnection == null) {
+			callbackContext.sendPluginResult(new PluginResult(
+					PluginResult.Status.ERROR));
+			return;
+		}
+		mConnection.sendDigits(arguments.optString(0));
+	}
+	
+	private void muteConnection(CallbackContext callbackContext) {
+		if (mConnection == null) {
+			callbackContext.sendPluginResult(new PluginResult(
+					PluginResult.Status.ERROR));
+			return;
+		}
+		mConnection.setMuted(!mConnection.isMuted());
+		callbackContext.success();
+	}
+
+	
 	// DeviceListener methods
 
 	@Override
 	public void onPresenceChanged(Device device, PresenceEvent presenceEvent) {
-		/*
-		 * JSONObject object = new JSONObject(); try { object.put("from",
-		 * presenceEvent.getName()); object.put("available",
-		 * presenceEvent.isAvailable()); } catch (JSONException e) {
-		 * callbackContext.sendPluginResult(new
-		 * PluginResult(PluginResult.Status.JSON_EXCEPTION)); return; }
-		 * javascriptCallback("onpresence", object,callbackContext);
-		 */
+		
+		 JSONObject object = new JSONObject(); 
+		 try { 
+			 object.put("from", presenceEvent.getName()); 
+			 object.put("available",presenceEvent.isAvailable()); 
+		 } catch (JSONException e) {
+			 mInitCallbackContext.sendPluginResult(new
+					 PluginResult(PluginResult.Status.JSON_EXCEPTION)); 
+			 return; 
+		 }
+		 javascriptCallback("onpresence", object,mInitCallbackContext);
+		 
 	}
 
 	@Override
@@ -224,7 +273,6 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 
 	@Override
 	public boolean receivePresenceEvents(Device device) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -232,7 +280,6 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 	@Override
 	public void onError(Exception ex) {
 		Log.e(TAG, "Error Initializing Twilio: " + ex.getMessage(), ex);
-		mInitCallbackContext = null;
 
 	}
 
@@ -240,7 +287,6 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 	public void onInitialized() {
 		Log.d(TAG, "Twilio Initialized");
 		deviceSetup(mInitDeviceSetupArgs, mInitCallbackContext);
-		mInitCallbackContext = null;
 	}
 
 	// Twilio Connection Listener methods
@@ -281,6 +327,9 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 	// Plugin-to-Javascript communication methods
 	private void javascriptCallback(String event, JSONObject arguments,
 			CallbackContext callbackContext) {
+		if (callbackContext == null) {
+			return;
+		}
 		JSONObject options = new JSONObject();
 		try {
 			options.putOpt("callback", event);
@@ -318,8 +367,10 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 
 	private void fireDocumentEvent(String eventName) {
 		if (eventName != null) {
-			webView.sendJavascript("cordova.fireDocumentEvent('"
-					+ eventName + "');");
+			//webView.sendJavascript("cordova.fireDocumentEvent('"
+			//		+ eventName + "');");
+			//webView.sendJavascript("alert('"+ eventName + "');");
+			javascriptCallback(eventName,mInitCallbackContext);
 		}
 	}
 
