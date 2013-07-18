@@ -115,6 +115,12 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 		} else if ("muteConnection".equals(action)) {
 			muteConnection(callbackContext);
 			return true;
+		} else if ("deviceStatus".equals(action)) {
+			deviceStatus(callbackContext);
+			return true;
+		} else if ("connectionStatus".equals(action)) {
+			connectionStatus(callbackContext);
+			return true;
 		}
 
 		return false; 
@@ -231,6 +237,62 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 		}
 		mConnection.setMuted(!mConnection.isMuted());
 		callbackContext.success();
+	}
+	
+
+	private void deviceStatus(CallbackContext callbackContext) {
+		if (mDevice == null) {
+			callbackContext.sendPluginResult(new PluginResult(
+					PluginResult.Status.ERROR));
+			return;
+		}
+		String state = "";
+		switch (mDevice.getState()) {
+		case BUSY:
+			state = "busy";
+			break;
+		case OFFLINE:
+			state = "offline";
+			break;
+		case READY:
+			state = "ready";
+			break;
+		default:
+			break;
+		}
+		
+		PluginResult result = new PluginResult(PluginResult.Status.OK,state);
+		callbackContext.sendPluginResult(result);
+	}
+
+
+	private void connectionStatus(CallbackContext callbackContext) {
+		if (mConnection == null) {
+			callbackContext.sendPluginResult(new PluginResult(
+					PluginResult.Status.ERROR));
+			return;
+		}
+		String state = "";
+		switch (mConnection.getState()) {
+		case CONNECTED:
+			state = "open";
+			break;
+		case CONNECTING:
+			state = "connecting";
+			break;
+		case DISCONNECTED:
+			state = "closed";
+			break;
+		case PENDING:
+			state = "pending";
+			break;
+		default:
+			break;
+		
+		}
+		
+		PluginResult result = new PluginResult(PluginResult.Status.OK,state);
+		callbackContext.sendPluginResult(result);
 	}
 
 	
@@ -367,9 +429,6 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 
 	private void fireDocumentEvent(String eventName) {
 		if (eventName != null) {
-			//webView.sendJavascript("cordova.fireDocumentEvent('"
-			//		+ eventName + "');");
-			//webView.sendJavascript("alert('"+ eventName + "');");
 			javascriptCallback(eventName,mInitCallbackContext);
 		}
 	}
