@@ -1,6 +1,8 @@
-# Twilio Client Phonegap plugins
+# Twilio Client Phonegap plugins for iOS and Android
 
-This is a Phonegap plugin that exposes the same JS API as Twilio Client for web as much as possible, meaning you should be able to use the same Twilio Client code from your web application inside of your Phonegap application with few if any modifications. 
+These are Phonegap plugins that expose the same JS API as Twilio Client for web as much as possible, meaning you should be able to use the same Twilio Client code from your web application inside of your Phonegap application with few if any modifications. 
+
+# iOS
 
 ##Instructions
 
@@ -14,6 +16,31 @@ This is a Phonegap plugin that exposes the same JS API as Twilio Client for web 
     <feature name="TCPlugin">
         <param name="ios-package" value="TCPlugin" />
     </feature>
+
+# Android
+
+## Instructions
+
+- Follow the directions to create a new PhoneGap/Cordova Android application.
+- Download and install the Twilio Client Android SDK into your Android application project. Follow the directions in the Twilio Client for Android documentation, with two particular things to keep in mind - you will need the ACCESS_WIFI_STATE permission in your AndroidManifest.xml (the other permissions come with the PhoneGap Android starter app), and you will need to add the Twilio Service to the AndroidManifest.xml file. 
+- To handle incoming calls, the Twilio Android Client SDK requires another activity (that is bundled with this plugin) be added to the AndroidManifest.xml inside the <application> tag. Add this line of code:
+
+```
+    <application>
+    ....
+        <activity android:name="com.phonegap.plugins.twilioclient.IncomingConnectionActivity"  android:theme="@android:style/Theme.NoDisplay"/>
+    ....
+    </application>
+```
+- Add tcPlugin.js to your application's www folder (in the assets directory)
+- Copy the two plugin .java files into your application's src folder, keeping the com/phonegap/plugins/twilioclient directory structure
+- Last, add the plugin to config.xml (in res/xml)
+
+```
+    <feature name="TCPlugin">
+      <param name="android-package" value="com.phonegap.plugins.twilioclient.TCPlugin"/>
+    </feature>
+```
 
 ## Limitations
 
