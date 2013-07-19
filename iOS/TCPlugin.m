@@ -1,6 +1,6 @@
 //
 //  TCPlugin.h
-//  Twilio Client plugin for PhoneGap
+//  Twilio Client plugin for PhoneGap / Cordova
 //
 //  Copyright 2012 Stevie Graham.
 //
@@ -16,6 +16,7 @@
 @property(nonatomic, strong) TCDevice     *device;
 @property(nonatomic, strong) NSString     *callback;
 @property(atomic, strong)    TCConnection *connection;
+@property(atomic, strong)    UILocalNotification *ringNotification;
 
 -(void)javascriptCallback:(NSString *)event;
 -(void)javascriptCallback:(NSString *)event withArguments:(NSDictionary *)arguments;
@@ -28,6 +29,7 @@
 @synthesize device     = _device;
 @synthesize callback   = _callback;
 @synthesize connection = _connection;
+@synthesize ringNotification = _ringNotification;
 
 # pragma mark device delegate method
 
@@ -36,6 +38,7 @@
 }
 
 -(void)device:(TCDevice *)device didReceiveIncomingConnection:(TCConnection *)connection {
+    self.connection = connection;    
     [self javascriptCallback:@"onincoming"];
 }
 
@@ -128,6 +131,10 @@
     [self.connection disconnect];
 }
 
+-(void)rejectConnection:(NSArray *)arguments withDict:(NSMutableDictionary *)options {
+    [self.connection reject];
+}
+
 -(void)muteConnection:(NSArray *)arguments withDict:(NSMutableDictionary *)options {
     if(self.connection.isMuted) {
         self.connection.muted = NO;
@@ -164,6 +171,54 @@
         
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:state];    
     [self performSelectorOnMainThread:@selector(writeJavascript:) withObject:[result toSuccessCallbackString:[arguments pop]] waitUntilDone:NO];
+}
+
+
+-(void)showNotification:(CDVInvokedUrlCommand*)command {
+    @try {
+        [[UIApplication sharedApplication] cancelAllLocalNotifications];
+    }
+    @catch(NSException *exception) {
+        NSLog(@"Couldn't Cancel Notification");
+    }
+    
+    NSString *alertBody = [command.arguments objectAtIndex:0];
+    
+    NSString *ringSound = @"incoming.wav";
+    
+    @try {
+        ringSound = [command.arguments objectAtIndex:1];
+        NSString* fileName = [[ringSound lastPathComponent] stringByDeletingPathExtension];
+        NSString* extension = [ringSound pathExtension];
+        NSBundle *myBundle = [NSBundle mainBundle];
+        NSString *pathToFile = [myBundle pathForResource:fileName ofType:extension];
+        if (pathToFile == nil) {
+            NSLog(@"Couldn't find notification sound.");
+            ringSound = @"incoming.wav";
+        }
+        else {
+            
+        }
+    }
+    @catch (NSException *exception) {
+        NSLog(@"Couldn't find notification sound.");
+        ringSound = @"incoming.wav";
+    }
+
+    _ringNotification = [[UILocalNotification alloc] init];
+    _ringNotification.alertBody = alertBody;
+    _ringNotification.alertAction = @"Answer";
+    _ringNotification.soundName = ringSound;
+    _ringNotification.fireDate = [NSDate date];
+    //_ringNotification.repeatInterval = nil;
+    //_ringNotification.userInfo = [NSDictionary dictionaryWithObjectsAndKeys: 0, @"notificationId", 0, @"callbackId", nil];
+    //[[UIApplication sharedApplication] presentLocalNotificationNow:_ringNotification];
+    [[UIApplication sharedApplication] scheduleLocalNotification:_ringNotification];
+
+}
+
+-(void)cancelNotification:(CDVInvokedUrlCommand*)command {
+    [[UIApplication sharedApplication] cancelLocalNotification:_ringNotification];
 }
 
 # pragma mark private methods

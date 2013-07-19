@@ -15,6 +15,18 @@ This is a Phonegap plugin that exposes the same JS API as Twilio Client for web 
         <param name="ios-package" value="TCPlugin" />
     </feature>
 
+## Additional iOS Features
+
+In addition to the standard features of the Twilio Client JS Library, you can also use the included showNotification and cancelNotification functions to display an iOS UILocalNotifcation to the user when during an incoming call while the app is running in the background:
+
+```javascript
+Twilio.Connection.showNotification("Notification Text", "notification_sound.wav");
+```
+
+```javascript
+Twilio.Connection.cancelNotification();
+```
+
 ## Limitations
 
 This is plugin is a first cut and should be considered alpha. Please use it and break it :) Report any issues using the Github issue tracker.
