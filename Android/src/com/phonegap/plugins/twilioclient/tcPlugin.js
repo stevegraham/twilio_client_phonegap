@@ -87,6 +87,18 @@
         }
     }
 
+    TwilioPlugin.Connection.prototype.showNotification = function(alertBody, ringSound) {
+        var args = [alertBody, ringSound];
+        if(ringSound === "undefined") {
+            args = [alertBody];
+        }    
+        Cordova.exec(null, null, "TCPlugin", "showNotification", args);
+    }
+
+    TwilioPlugin.Connection.prototype.cancelNotification = function() {
+        Cordova.exec(null, null, "TCPlugin", "cancelNotification", []);
+    }
+
     TwilioPlugin.Connection.prototype.reject = function() {
         Cordova.exec(null,null,"TCPlugin","rejectConnection",[]);
     }

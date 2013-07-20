@@ -3,7 +3,6 @@ package com.phonegap.plugins.twilioclient;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.cordova.api.CallbackContext;
 import org.apache.cordova.api.CordovaPlugin;
@@ -13,11 +12,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.R;
+import android.app.Activity;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -48,6 +52,10 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 	private Connection mConnection;
 	private CallbackContext mInitCallbackContext;
 	private JSONArray mInitDeviceSetupArgs;
+	private int mCurrentNotificationId = 1;
+	private String mCurrentNotificationText;
+
+	
 
 	private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
 		@Override
@@ -59,6 +67,29 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 			JSONObject connection = new JSONObject();
 			try {
 				connection.putOpt("parameters", getJSONObject(mConnection.getParameters()));
+				
+				if (mCurrentNotificationText != null) {
+
+
+			        PackageManager pm = context.getPackageManager();
+			        Intent notificationIntent = pm.getLaunchIntentForPackage(context.getPackageName());
+			        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+			        
+				    PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+
+					NotificationCompat.Builder mBuilder =
+						    new NotificationCompat.Builder(context)
+						    .setSmallIcon(R.drawable.btn_star_big_on)
+						    .setContentTitle("Answer")
+						    .setContentText(mCurrentNotificationText)
+						    .setContentIntent(pendingIntent);
+					// Gets an instance of the NotificationManager service
+					NotificationManager mNotifyMgr = 
+					        (NotificationManager) TCPlugin.this.webView.getContext().getSystemService(Activity.NOTIFICATION_SERVICE);
+					// Builds the notification and issues it.
+					mNotifyMgr.notify(mCurrentNotificationId, mBuilder.build());
+				}
+				
 			} catch (JSONException e) {
 				Log.e(TAG,e.getLocalizedMessage(), e);
 			}
@@ -120,6 +151,14 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 			return true;
 		} else if ("connectionStatus".equals(action)) {
 			connectionStatus(callbackContext);
+			return true;
+		} else if ("rejectConnection".equals(action)) {
+			return true;
+		} else if ("showNotification".equals(action)) {
+			showNotification(args,callbackContext);
+			return true;
+		} else if ("cancelNotification".equals(action)) {
+			cancelNotification(args,callbackContext);
 			return true;
 		}
 
@@ -295,6 +334,21 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 		callbackContext.sendPluginResult(result);
 	}
 
+	
+	private void showNotification(JSONArray arguments, CallbackContext context) {
+		NotificationManager mNotifyMgr = 
+		        (NotificationManager) TCPlugin.this.webView.getContext().getSystemService(Activity.NOTIFICATION_SERVICE);
+		mNotifyMgr.cancelAll();
+		mCurrentNotificationText = arguments.optString(0);
+		context.success();
+	}
+	
+	private void cancelNotification(JSONArray arguments, CallbackContext context) {
+		NotificationManager mNotifyMgr = 
+		        (NotificationManager) TCPlugin.this.webView.getContext().getSystemService(Activity.NOTIFICATION_SERVICE);
+		mNotifyMgr.cancel(mCurrentNotificationId);
+		context.success();
+	}
 	
 	// DeviceListener methods
 
