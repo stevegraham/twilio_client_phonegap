@@ -35,8 +35,9 @@
 -(void)disconnectConnection:(NSArray *)arguments withDict:(NSMutableDictionary *)options;
 -(void)rejectConnection:(NSArray *)arguments withDict:(NSMutableDictionary *)options;
 -(void)muteConnection:(NSArray *)arguments withDict:(NSMutableDictionary *)options;
--(void)sendDigits:(NSMutableArray *)arguments withDict:(NSMutableDictionary *)options;
+-(void)sendDigits:(CDVInvokedUrlCommand*)command;
 -(void)showNotification:(CDVInvokedUrlCommand*)command;
 -(void)cancelNotification:(CDVInvokedUrlCommand*)command;
+-(void)setSpeaker:(CDVInvokedUrlCommand*)command;
 
 @end

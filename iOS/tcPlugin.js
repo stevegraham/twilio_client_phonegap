@@ -74,9 +74,9 @@
     // Noops until I figure out why the hell using sounds in Phonegap gives EXC_BAD_ACCESS
     
     TwilioPlugin.Device.prototype.sounds = {
-        incoming: function(boolean) {},
-        outgoing: function(boolean) {},
-        disconnect: function(boolean) {}
+        //incoming: function(boolean) {},
+        //outgoing: function(boolean) {},
+        //disconnect: function(boolean) {}
     }
     
 
@@ -98,6 +98,11 @@
 
     TwilioPlugin.Connection.prototype.cancelNotification = function() {
         Cordova.exec(null, null, "TCPlugin", "cancelNotification", []);
+    }
+
+    TwilioPlugin.Connection.prototype.setSpeaker = function(mode) {
+        // "on" or "off"        
+        Cordova.exec(null, null, "TCPlugin", "setSpeaker", [mode]);
     }
 
     TwilioPlugin.Connection.prototype.reject = function() {

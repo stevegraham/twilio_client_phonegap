@@ -82,9 +82,9 @@
     self.device = [[TCDevice alloc] initWithCapabilityToken:[arguments pop] delegate:self];
     
     // Disable sounds. was getting EXC_BAD_ACCESS
-    self.device.incomingSoundEnabled   = NO;
-    self.device.outgoingSoundEnabled   = NO;
-    self.device.disconnectSoundEnabled = NO;
+    //self.device.incomingSoundEnabled   = NO;
+    //self.device.outgoingSoundEnabled   = NO;
+    //self.device.disconnectSoundEnabled = NO;
     
     [self javascriptCallback:@"onready"];
 }
@@ -143,8 +143,8 @@
     }
 }
 
--(void)sendDigits:(NSMutableArray *)arguments withDict:(NSMutableDictionary *)options {
-    [self.connection sendDigits:[arguments pop]];
+-(void)sendDigits:(CDVInvokedUrlCommand*)command {
+    [self.connection sendDigits:[command.arguments objectAtIndex:0]];
 }
 
 -(void)connectionStatus:(NSMutableArray *)arguments withDict:(NSMutableDictionary *)options {
@@ -219,6 +219,26 @@
 
 -(void)cancelNotification:(CDVInvokedUrlCommand*)command {
     [[UIApplication sharedApplication] cancelLocalNotification:_ringNotification];
+}
+
+-(void)setSpeaker:(CDVInvokedUrlCommand*)command {
+    NSString *mode = [command.arguments objectAtIndex:0];
+    if([mode isEqual: @"on"]) {
+        UInt32 audioRouteOverride = kAudioSessionOverrideAudioRoute_Speaker;
+        AudioSessionSetProperty (
+            kAudioSessionProperty_OverrideAudioRoute,
+            sizeof (audioRouteOverride),
+            &audioRouteOverride
+        );
+    }
+    else {
+        UInt32 audioRouteOverride = kAudioSessionOverrideAudioRoute_None;
+        AudioSessionSetProperty (
+            kAudioSessionProperty_OverrideAudioRoute,
+            sizeof (audioRouteOverride),
+            &audioRouteOverride
+        );
+    }
 }
 
 # pragma mark private methods
