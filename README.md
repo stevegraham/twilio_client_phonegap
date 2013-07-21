@@ -27,6 +27,12 @@ Twilio.Connection.showNotification("Notification Text", "notification_sound.wav"
 Twilio.Connection.cancelNotification();
 ```
 
+You can also turn the device's speaker phone on or off during a call using the following method:
+
+```javascript
+Twilio.Connection.setSpeaker("on");
+```
+
 ## Limitations
 
 This is plugin is a first cut and should be considered alpha. Please use it and break it :) Report any issues using the Github issue tracker.
