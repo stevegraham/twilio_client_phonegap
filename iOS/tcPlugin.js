@@ -90,7 +90,7 @@
 
     TwilioPlugin.Connection.prototype.showNotification = function(alertBody, ringSound) {
         var args = [alertBody, ringSound];
-        if(ringSound === "undefined") {
+        if(ringSound == undefined) {
             args = [alertBody];
         }    
         Cordova.exec(null, null, "TCPlugin", "showNotification", args);

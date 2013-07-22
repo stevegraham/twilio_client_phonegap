@@ -185,24 +185,9 @@
     NSString *alertBody = [command.arguments objectAtIndex:0];
     
     NSString *ringSound = @"incoming.wav";
-    
-    @try {
+    NSLog([NSString stringWithFormat:@"%d", [command.arguments count]]);
+    if([command.arguments count] == 2) {
         ringSound = [command.arguments objectAtIndex:1];
-        NSString* fileName = [[ringSound lastPathComponent] stringByDeletingPathExtension];
-        NSString* extension = [ringSound pathExtension];
-        NSBundle *myBundle = [NSBundle mainBundle];
-        NSString *pathToFile = [myBundle pathForResource:fileName ofType:extension];
-        if (pathToFile == nil) {
-            NSLog(@"Couldn't find notification sound.");
-            ringSound = @"incoming.wav";
-        }
-        else {
-            
-        }
-    }
-    @catch (NSException *exception) {
-        NSLog(@"Couldn't find notification sound.");
-        ringSound = @"incoming.wav";
     }
 
     _ringNotification = [[UILocalNotification alloc] init];
@@ -210,9 +195,6 @@
     _ringNotification.alertAction = @"Answer";
     _ringNotification.soundName = ringSound;
     _ringNotification.fireDate = [NSDate date];
-    //_ringNotification.repeatInterval = nil;
-    //_ringNotification.userInfo = [NSDictionary dictionaryWithObjectsAndKeys: 0, @"notificationId", 0, @"callbackId", nil];
-    //[[UIApplication sharedApplication] presentLocalNotificationNow:_ringNotification];
     [[UIApplication sharedApplication] scheduleLocalNotification:_ringNotification];
 
 }
