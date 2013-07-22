@@ -185,7 +185,6 @@
     NSString *alertBody = [command.arguments objectAtIndex:0];
     
     NSString *ringSound = @"incoming.wav";
-    NSLog([NSString stringWithFormat:@"%d", [command.arguments count]]);
     if([command.arguments count] == 2) {
         ringSound = [command.arguments objectAtIndex:1];
     }
