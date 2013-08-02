@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
-import com.twilio.client.Connection;
-import com.twilio.client.Device;
+//import com.twilio.client.Connection;
+//import com.twilio.client.Device;
 
 /**
  * 

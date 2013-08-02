@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.media.AudioManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -70,7 +71,7 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 				
 				if (mCurrentNotificationText != null) {
 
-
+					/*
 			        PackageManager pm = context.getPackageManager();
 			        Intent notificationIntent = pm.getLaunchIntentForPackage(context.getPackageName());
 			        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -88,6 +89,7 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 					        (NotificationManager) TCPlugin.this.webView.getContext().getSystemService(Activity.NOTIFICATION_SERVICE);
 					// Builds the notification and issues it.
 					mNotifyMgr.notify(mCurrentNotificationId, mBuilder.build());
+					*/
 				}
 				
 			} catch (JSONException e) {
@@ -153,12 +155,16 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 			connectionStatus(callbackContext);
 			return true;
 		} else if ("rejectConnection".equals(action)) {
+			rejectConnection(args, callbackContext);
 			return true;
 		} else if ("showNotification".equals(action)) {
 			showNotification(args,callbackContext);
 			return true;
 		} else if ("cancelNotification".equals(action)) {
 			cancelNotification(args,callbackContext);
+			return true;
+		} else if ("setSpeaker".equals(action)) {
+			setSpeaker(args,callbackContext);
 			return true;
 		}
 
@@ -253,6 +259,11 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 		callbackContext.success(); 
 	}
 	
+	private void rejectConnection(JSONArray arguments, CallbackContext callbackContext) {
+		mConnection.reject();
+		callbackContext.success(); 
+	}
+	
 	private void disconnectConnection(JSONArray arguments, CallbackContext callbackContext) {
 		mConnection.disconnect();
 		callbackContext.success();
@@ -340,6 +351,23 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 		        (NotificationManager) TCPlugin.this.webView.getContext().getSystemService(Activity.NOTIFICATION_SERVICE);
 		mNotifyMgr.cancelAll();
 		mCurrentNotificationText = arguments.optString(0);
+		
+		Context acontext = TCPlugin.this.webView.getContext();
+		PackageManager pm = acontext.getPackageManager();
+        Intent notificationIntent = pm.getLaunchIntentForPackage(acontext.getPackageName());
+        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        
+	    PendingIntent pendingIntent = PendingIntent.getActivity(acontext, 0, notificationIntent, 0);  
+
+		NotificationCompat.Builder mBuilder =
+			    new NotificationCompat.Builder(acontext)
+			    .setSmallIcon(R.drawable.btn_star_big_on)
+			    .setContentTitle("Answer")
+			    .setContentText(mCurrentNotificationText)
+			    .setContentIntent(pendingIntent);
+		mNotifyMgr.notify(mCurrentNotificationId, mBuilder.build());
+		
+		
 		context.success();
 	}
 	
@@ -348,6 +376,28 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 		        (NotificationManager) TCPlugin.this.webView.getContext().getSystemService(Activity.NOTIFICATION_SERVICE);
 		mNotifyMgr.cancel(mCurrentNotificationId);
 		context.success();
+	}
+	
+	/**
+	 * 	Changes sound from earpiece to speaker and back
+	 * 
+	 * 	@param mode	Speaker Mode
+	 * */
+	public void setSpeaker(JSONArray arguments, final CallbackContext callbackContext) {
+		Context context = cordova.getActivity().getApplicationContext();
+		AudioManager m_amAudioManager;
+        m_amAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        String mode = arguments.optString(0);
+        if(mode.equals("on")) {
+        	Log.d("TCPlugin", "SPEAKER");
+        	m_amAudioManager.setMode(AudioManager.MODE_NORMAL);
+        	m_amAudioManager.setSpeakerphoneOn(true);        	
+        }
+        else {
+        	Log.d("TCPlugin", "EARPIECE");
+        	m_amAudioManager.setMode(AudioManager.MODE_IN_CALL); 
+        	m_amAudioManager.setSpeakerphoneOn(false);
+        }
 	}
 	
 	// DeviceListener methods
