@@ -33,6 +33,7 @@ These are Phonegap plugins that expose the same JS API as Twilio Client for web 
     </application>
 ```
 - Add tcPlugin.js to your application's www folder (in the assets directory)
+- You need to add a notification.png file to your applications res/drawable-ldpi, res/drawable-mdpi & res/drawable-hdpi or res/drawable-xhdpi directories (depending on what resolutions you want to support).
 - Copy the two plugin .java files into your application's src folder, keeping the com/phonegap/plugins/twilioclient directory structure
 - Last, add the plugin to config.xml (in res/xml)
 
