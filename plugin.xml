@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    id="com.phonegap.plugins.twilioclient"
+    version="1.0.1">
+
+    <name>TwilioClient</name>
+    <description>Use the native Twilio Client for iOS or Android wtih Cordova/PhoneGap and the Twilio Client JavaScript API</description>
+    <author>Stevie Graham/Lyle Pratt/Jeff Linwood</author>
+    <license>Apache</license>
+
+    <asset src="www/tcPlugin.js" target="js/tcPlugin.js" />
+    <asset src="www/tcPluginIOS.js" target="js/tcPluginIOS.js" />
+    <!-- ios -->
+    <platform name="ios">
+        <!-- Add the Twilio Client plugin to the iOS app's config.xml -->
+        <config-file target="config.xml" parent="widget">
+          <feature name="TCPlugin">
+            <param name="ios-package"
+                value="TCPlugin"/>
+          </feature>
+        </config-file>
+
+        <!-- Add support for background VOIP and audio to the plist -->
+        <config-file target="*-Info.plist" parent="UIBackgroundModes">
+            <array>
+                <string>voip</string>
+                <string>audio</string>
+            </array>
+        </config-file>
+        
+
+        <framework src="AudioToolbox.framework" />
+        <framework src="AVFoundation.framework" />
+        <framework src="CFNetwork.framework" />
+        <framework src="SystemConfiguration.framework" />
+
+        <header-file src="src/ios/TCPlugin.h" />
+        <source-file src="src/ios/TCPlugin.m" />
+
+        <info>
+You need to download __Twilio Client for iOS__ from https://www.twilio.com/docs/client/ios. Uncompress the download - you will need to follow a few steps that plugman can not do yet:
+
+* Add the Twilio Client static libraries (the .a files in the Libraries folder) to your Xcode project
+
+* Add the Twilio Client headers files (the .h files in the Headers folder) to your Xcode project
+
+* Add -ObjC -all_load to "Other Linker Flags" in your target’s Build Setting
+        </info>
+    </platform>
+</plugin>
