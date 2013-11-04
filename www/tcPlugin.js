@@ -69,7 +69,7 @@
     }
 
     TwilioPlugin.Device.prototype.status = function() {
-        var status = Cordova.exec(null,null,"TCPlugin","deviceStatus",[]);
+        Cordova.exec(null,null,"TCPlugin","deviceStatus",[]);
     }
 
     TwilioPlugin.Device.prototype.sounds = {
