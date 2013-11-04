@@ -5,7 +5,10 @@
 //  Copyright 2012 Stevie Graham.
 //
 
+
 #import "TCPlugin.h"
+#import  <AVFoundation/AVFoundation.h>
+
 
 @interface TCPlugin() {
     TCDevice     *_device;
