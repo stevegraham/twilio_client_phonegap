@@ -11,6 +11,36 @@
 
     <asset src="www/tcPlugin.js" target="js/tcPlugin.js" />
     <asset src="www/tcPluginIOS.js" target="js/tcPluginIOS.js" />
+
+
+    <!-- android -->
+    <platform name="android">
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+        </config-file>
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+             <activity android:name="com.phonegap.plugins.twilioclient.IncomingConnectionActivity"  android:theme="@android:style/Theme.NoDisplay"/>
+            <service android:name="com.twilio.client.TwilioClientService" android:exported="false" />
+        </config-file>
+
+        <config-file target="res/xml/config.xml" parent="/widget">
+           <feature name="TCPlugin">
+              <param name="android-package" value="com.phonegap.plugins.twilioclient.TCPlugin"/>
+            </feature>
+        </config-file>
+
+        <source-file src="src/android/com/phonegap/plugins/twilioclient/IncomingConnectionActivity.java"
+                target-dir="src/com/phonegap/plugins/twilioclient" />
+         <source-file src="src/android/com/phonegap/plugins/twilioclient/TCPlugin.java"
+                target-dir="src/com/phonegap/plugins/twilioclient" />
+        <info>
+You need to download __Twilio Client for Android__ from https://www.twilio.com/docs/client/android. Uncompress the download - you will need to follow one step that plugman can not do yet:
+
+* Add the Twilio Client Java libraries (everything in the libs folder) to your project's libs folder - (platforms/android/libs)
+
+        </info>
+    </platform>
+
     <!-- ios -->
     <platform name="ios">
         <!-- Add the Twilio Client plugin to the iOS app's config.xml -->
