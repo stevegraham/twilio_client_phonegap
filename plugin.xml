@@ -10,8 +10,6 @@
     <license>Apache</license>
 
     <asset src="www/tcPlugin.js" target="js/tcPlugin.js" />
-    <asset src="www/tcPluginIOS.js" target="js/tcPluginIOS.js" />
-
 
     <!-- android -->
     <platform name="android">
