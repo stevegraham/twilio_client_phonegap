@@ -2,46 +2,33 @@
 
 These are Phonegap plugins that expose the same JS API as Twilio Client for web as much as possible, meaning you should be able to use the same Twilio Client code from your web application inside of your Phonegap application with few if any modifications. 
 
+# PhoneGap Overview
+
+- Install the most recent version of the PhoneGap (as of this writing, 3.1.0) tools  - http://phonegap.com/ 
+- Install plugman - https://github.com/apache/cordova-plugman
+
 # iOS
 
 ##Instructions
 
-- Follow the directions to create a new PhoneGap/Cordova iOS application.
+```
+ plugman install --platform ios --project platforms/ios --plugin https://github.com/jefflinwood/twilio_client_phonegap.git
 
-- Follow the instructions in the Twilio iOS client quickstart, e.g. copy headers and static lib into your xcode project, link required frameworks, linker flags, etc.
+```
 
-- Copy the Objective-C files into the `plugins` directory of your Phonegap project, and the JavaScript file into the `www` directory.
 
-- Add a new plugin XML item in config.xml:
-    <feature name="TCPlugin">
-        <param name="ios-package" value="TCPlugin" />
-    </feature>
+- After installing the Twilio Client plugin, you will need to download and install the Twilio Client SDK for iOS - follow the directions provided after plugman finishes.
 
 # Android
 
 ## Instructions
 
-- Follow the directions to create a new PhoneGap/Cordova Android application.
-- Download and install the Twilio Client Android SDK into your Android application project. Follow the directions in the Twilio Client for Android documentation, with two particular things to keep in mind - you will need the ACCESS_WIFI_STATE permission in your AndroidManifest.xml (the other permissions come with the PhoneGap Android starter app), and you will need to add the Twilio Service to the AndroidManifest.xml file. 
-- To handle incoming calls, the Twilio Android Client SDK requires another activity (that is bundled with this plugin) be added to the AndroidManifest.xml inside the <application> tag. Add this line of code:
+```
+plugman install --platform android --project platforms/android --plugin https://github.com/jefflinwood/twilio_client_phonegap.git
 
 ```
-    <application>
-    ....
-        <activity android:name="com.phonegap.plugins.twilioclient.IncomingConnectionActivity"  android:theme="@android:style/Theme.NoDisplay"/>
-    ....
-    </application>
-```
-- Add tcPlugin.js to your application's www folder (in the assets directory)
-- You need to add a notification.png file to your applications res/drawable-ldpi, res/drawable-mdpi & res/drawable-hdpi or res/drawable-xhdpi directories (depending on what resolutions you want to support).
-- Copy the two plugin .java files into your application's src folder, keeping the com/phonegap/plugins/twilioclient directory structure
-- Last, add the plugin to config.xml (in res/xml)
 
-```
-    <feature name="TCPlugin">
-      <param name="android-package" value="com.phonegap.plugins.twilioclient.TCPlugin"/>
-    </feature>
-```
+- After installing the Twilio Client plugin, you will need to download and install the Twilio Client SDK for Android - follow the directions provided after plugman finishes.
 
 ## Additional Features
 
