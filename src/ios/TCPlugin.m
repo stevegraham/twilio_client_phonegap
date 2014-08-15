@@ -80,9 +80,9 @@
 
 # pragma mark javascript device mapper methods
 
--(void)deviceSetup:(NSMutableArray *)arguments withDict:(NSMutableDictionary*)options {
-    self.callback = [arguments pop];
-    self.device = [[TCDevice alloc] initWithCapabilityToken:[arguments pop] delegate:self];
+-(void)deviceSetup:(CDVInvokedUrlCommand*)command {
+    self.callback = command.callbackId;
+    self.device = [[TCDevice alloc] initWithCapabilityToken:[command.arguments objectAtIndex:0] delegate:self];
     
     // Disable sounds. was getting EXC_BAD_ACCESS
     //self.device.incomingSoundEnabled   = NO;
@@ -92,15 +92,15 @@
     [self javascriptCallback:@"onready"];
 }
 
--(void)connect:(NSArray *)arguments withDict:(NSMutableDictionary *)options {
-    [self.device connect:options delegate:self];
+-(void)connect:(CDVInvokedUrlCommand*)command {
+    [self.device connect:[command.arguments objectAtIndex:0] delegate:self];
 }
 
--(void)disconnectAll:(NSArray *)arguments withDict:(NSMutableDictionary *)options {
+-(void)disconnectAll:(CDVInvokedUrlCommand*)command {
     [self.device disconnectAll];
 }
 
--(void)deviceStatus:(NSMutableArray *)arguments withDict:(NSMutableDictionary *)options {
+-(void)deviceStatus:(CDVInvokedUrlCommand*)command {
     NSString *state;
     switch ([self.device state]) {
         case TCDeviceStateBusy:
@@ -120,25 +120,25 @@
     }
     
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:state];    
-    [self performSelectorOnMainThread:@selector(writeJavascript:) withObject:[result toSuccessCallbackString:[arguments pop]] waitUntilDone:NO];
+    [self performSelectorOnMainThread:@selector(writeJavascript:) withObject:[result toSuccessCallbackString:command.callbackId] waitUntilDone:NO];
 }
 
 
 # pragma mark javascript connection mapper methods
 
--(void)acceptConnection:(NSArray *)arguments withDict:(NSMutableDictionary *)options {
+-(void)acceptConnection:(CDVInvokedUrlCommand*)command {
     [self.connection accept];
 }
 
--(void)disconnectConnection:(NSArray *)arguments withDict:(NSMutableDictionary *)options {
+-(void)disconnectConnection:(CDVInvokedUrlCommand*)command {
     [self.connection disconnect];
 }
 
--(void)rejectConnection:(NSArray *)arguments withDict:(NSMutableDictionary *)options {
+-(void)rejectConnection:(CDVInvokedUrlCommand*)command {
     [self.connection reject];
 }
 
--(void)muteConnection:(NSArray *)arguments withDict:(NSMutableDictionary *)options {
+-(void)muteConnection:(CDVInvokedUrlCommand*)command {
     if(self.connection.isMuted) {
         self.connection.muted = NO;
     } else {
@@ -150,7 +150,7 @@
     [self.connection sendDigits:[command.arguments objectAtIndex:0]];
 }
 
--(void)connectionStatus:(NSMutableArray *)arguments withDict:(NSMutableDictionary *)options {
+-(void)connectionStatus:(CDVInvokedUrlCommand*)command {
     NSString *state;
     switch ([self.connection state]) {
         case TCConnectionStateConnected:
@@ -173,7 +173,7 @@
     }
         
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:state];    
-    [self performSelectorOnMainThread:@selector(writeJavascript:) withObject:[result toSuccessCallbackString:[arguments pop]] waitUntilDone:NO];
+    [self performSelectorOnMainThread:@selector(writeJavascript:) withObject:[result toSuccessCallbackString:command.callbackId] waitUntilDone:NO];
 }
 
 
