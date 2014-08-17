@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.cordova.api.CallbackContext;
-import org.apache.cordova.api.CordovaPlugin;
-import org.apache.cordova.api.PluginResult;
-import org.apache.cordova.api.PluginResult.Status;
+import org.apache.cordova.CallbackContext;
+import org.apache.cordova.CordovaPlugin;
+import org.apache.cordova.PluginResult;
+import org.apache.cordova.PluginResult.Status;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,10 +67,9 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 			mConnection = intent.getParcelableExtra(Device.EXTRA_CONNECTION);
 			mConnection.setConnectionListener(plugin);
 			Log.d(TAG, "incoming intent received with connection: "+ mConnection.getState().name());
-			JSONObject connection = new JSONObject();
 			String constate = mConnection.getState().name();
 			if(constate.equals("PENDING")) {
-				TCPlugin.this.javascriptCallback("onincoming", connection, mInitCallbackContext);				
+				TCPlugin.this.javascriptCallback("onincoming", mInitCallbackContext);				
 			}
 		}
 	};
