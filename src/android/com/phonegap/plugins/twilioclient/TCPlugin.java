@@ -129,6 +129,9 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 		} else if ("connectionStatus".equals(action)) {
 			connectionStatus(callbackContext);
 			return true;
+		} else if ("connectionParameters".equals(action)) {
+			connectionParameters(callbackContext);
+			return true;
 		} else if ("rejectConnection".equals(action)) {
 			rejectConnection(args, callbackContext);
 			return true;
@@ -309,6 +312,21 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 		}
 		
 		PluginResult result = new PluginResult(PluginResult.Status.OK,state);
+		callbackContext.sendPluginResult(result);
+	}
+
+
+	private void connectionParameters(CallbackContext callbackContext) {
+		if (mConnection == null) {
+			callbackContext.sendPluginResult(new PluginResult(
+					PluginResult.Status.ERROR));
+			return;
+		}
+		
+		JSONObject parameters = new JSONObject(mConnection.getParameters());
+
+
+		PluginResult result = new PluginResult(PluginResult.Status.OK,parameters);
 		callbackContext.sendPluginResult(result);
 	}
 
