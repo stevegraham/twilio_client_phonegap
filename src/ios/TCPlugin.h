@@ -26,6 +26,7 @@
 -(void)connectionDidConnect:(TCConnection*)connection;
 -(void)connectionDidDisconnect:(TCConnection*)connection;
 -(void)connectionStatus:(CDVInvokedUrlCommand*)command;
+-(void)connectionParameters:(CDVInvokedUrlCommand*)command;
 
 # pragma mark javascript mapper methods
 -(void)deviceSetup:(CDVInvokedUrlCommand*)command;

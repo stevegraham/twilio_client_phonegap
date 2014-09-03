@@ -134,6 +134,10 @@
     TwilioPlugin.Connection.prototype.status = function(fn) {
         Cordova.exec(fn, null, "TCPlugin", "connectionStatus", []);
     }
+	
+	    TwilioPlugin.Connection.prototype.parameters = function(fn) {
+        Cordova.exec(fn, null, "TCPlugin", "connectionParameters", []);
+    }
 
     TwilioPlugin.install = function() {
         if (!window.Twilio) window.Twilio = {};

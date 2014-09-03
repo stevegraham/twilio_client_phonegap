@@ -176,6 +176,11 @@
     [self performSelectorOnMainThread:@selector(writeJavascript:) withObject:[result toSuccessCallbackString:command.callbackId] waitUntilDone:NO];
 }
 
+-(void)connectionParameters:(CDVInvokedUrlCommand*)command {
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:[self.connection parameters]];
+    [self performSelectorOnMainThread:@selector(writeJavascript:) withObject:[result toSuccessCallbackString:command.callbackId] waitUntilDone:NO];
+}
+
 
 -(void)showNotification:(CDVInvokedUrlCommand*)command {
     @try {
