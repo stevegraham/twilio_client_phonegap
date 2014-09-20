@@ -68,8 +68,8 @@
         delegate['onpresence'] = fn;
     }
 
-    TwilioPlugin.Device.prototype.status = function() {
-        Cordova.exec(null,null,"TCPlugin","deviceStatus",[]);
+    TwilioPlugin.Device.prototype.status = function(fn) {
+        Cordova.exec(fn,null,"TCPlugin","deviceStatus",[]);
     }
 
     TwilioPlugin.Device.prototype.sounds = {
