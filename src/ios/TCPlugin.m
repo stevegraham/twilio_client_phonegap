@@ -88,8 +88,25 @@
     //self.device.incomingSoundEnabled   = NO;
     //self.device.outgoingSoundEnabled   = NO;
     //self.device.disconnectSoundEnabled = NO;
-    
-    [self javascriptCallback:@"onready"];
+
+    [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(deviceStatusEvent) userInfo:nil repeats:NO];
+}
+
+-(void)deviceStatusEvent {
+    switch ([self.device state]) {
+        case TCDeviceStateReady:
+            [self javascriptCallback:@"onready"];
+            NSLog(@"State: Ready");
+            break;
+            
+        case TCDeviceStateOffline:
+            [self javascriptCallback:@"onoffline"];
+            NSLog(@"State: Offline");
+            break;
+            
+        default:
+            break;
+    }
 }
 
 -(void)connect:(CDVInvokedUrlCommand*)command {
