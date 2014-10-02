@@ -170,6 +170,16 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 					PluginResult.Status.ERROR));
 			return;
 		}
+        if (arguments.optString(0).equals("")) {
+			Log.d("TCPlugin","Releasing device");
+			cordova.getThreadPool().execute(new Runnable(){
+				public void run() {
+					mDevice.release();
+				}
+			});
+			javascriptCallback("onoffline", callbackContext);
+			return;
+		}
 		mDevice = Twilio.createDevice(arguments.optString(0), this);
 
 		Intent intent = new Intent(this.cordova.getActivity(), IncomingConnectionActivity.class);
