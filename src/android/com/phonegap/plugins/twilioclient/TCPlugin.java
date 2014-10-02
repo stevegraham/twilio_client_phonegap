@@ -178,7 +178,26 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 		
 		LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(cordova.getActivity());
 		lbm.registerReceiver(mBroadcastReceiver, new IntentFilter(IncomingConnectionActivity.ACTION_NAME));
-		javascriptCallback("onready", callbackContext);
+		
+        deviceStatusEvent(callbackContext);
+	}
+            
+	private void deviceStatusEvent(CallbackContext callbackContext) {
+		if (mDevice == null) {
+			callbackContext.sendPluginResult(new PluginResult(
+					PluginResult.Status.ERROR));
+			return;
+		}
+		switch (mDevice.getState()) {
+		case OFFLINE:
+			javascriptCallback("onoffline", callbackContext);
+			break;
+		case READY:
+			javascriptCallback("onready", callbackContext);
+			break;
+		default:
+			break;
+		}
 	}
 
 	private void connect(JSONArray arguments, CallbackContext callbackContext) {
