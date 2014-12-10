@@ -170,6 +170,16 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 					PluginResult.Status.ERROR));
 			return;
 		}
+        if (arguments.optString(0).equals("")) {
+			Log.d("TCPlugin","Releasing device");
+			cordova.getThreadPool().execute(new Runnable(){
+				public void run() {
+					mDevice.release();
+				}
+			});
+			javascriptCallback("onoffline", callbackContext);
+			return;
+		}
 		mDevice = Twilio.createDevice(arguments.optString(0), this);
 
 		Intent intent = new Intent(this.cordova.getActivity(), IncomingConnectionActivity.class);
@@ -178,7 +188,26 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 		
 		LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(cordova.getActivity());
 		lbm.registerReceiver(mBroadcastReceiver, new IntentFilter(IncomingConnectionActivity.ACTION_NAME));
-		javascriptCallback("onready", callbackContext);
+		
+        deviceStatusEvent(callbackContext);
+	}
+            
+	private void deviceStatusEvent(CallbackContext callbackContext) {
+		if (mDevice == null) {
+			callbackContext.sendPluginResult(new PluginResult(
+					PluginResult.Status.ERROR));
+			return;
+		}
+		switch (mDevice.getState()) {
+		case OFFLINE:
+			javascriptCallback("onoffline", callbackContext);
+			break;
+		case READY:
+			javascriptCallback("onready", callbackContext);
+			break;
+		default:
+			break;
+		}
 	}
 
 	private void connect(JSONArray arguments, CallbackContext callbackContext) {
