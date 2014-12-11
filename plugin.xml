@@ -74,8 +74,6 @@ You need to download __Twilio Client for iOS__ from https://www.twilio.com/docs/
 * Add the Twilio Client static libraries (the .a files in the Libraries folder) to your Xcode project
 
 * Add the Twilio Client headers files (the .h files in the Headers folder) to your Xcode project
-
-* Add -ObjC -all_load to "Other Linker Flags" in your target’s Build Setting
         </info>
     </platform>
 </plugin>
