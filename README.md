@@ -2,12 +2,19 @@
 
 These are Phonegap plugins that expose the same JS API as Twilio Client for web as much as possible, meaning you should be able to use the same Twilio Client code from your web application inside of your Phonegap application with few if any modifications. 
 
-# PhoneGap Overview
+# PhoneGap/Cordova Overview
 
-- Install the most recent version of the PhoneGap (as of this writing, 3.1.0) tools  - http://phonegap.com/ 
+- Install the most recent version of Cordova (as of this writing, 4.2.0) tools  - http://http://cordova.apache.org/ 
 - Install plugman - https://github.com/apache/cordova-plugman
 
-# iOS
+# Both Platforms at once
+
+##Instructions
+```
+cordova plugin add  https://github.com/jefflinwood/twilio_client_phonegap.git
+```
+
+# iOS only
 
 ##Instructions
 
@@ -19,7 +26,7 @@ These are Phonegap plugins that expose the same JS API as Twilio Client for web 
 
 - After installing the Twilio Client plugin, you will need to download and install the Twilio Client SDK for iOS - follow the directions provided after plugman finishes.
 
-# Android
+# Android only
 
 ## Instructions
 
