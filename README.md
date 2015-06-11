@@ -10,6 +10,9 @@ These are Phonegap plugins that expose the same JS API as Twilio Client for web 
 - XCode 6.2
 - Android SDK 21
 
+# Example application
+https://github.com/jefflinwood/TwilioClientPhoneGapExampleApp
+
 # PhoneGap/Cordova Overview
 
 - Install the most recent version of Cordova (as of this writing, 4.3.0) tools  - http://http://cordova.apache.org/ 
