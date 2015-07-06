@@ -46,7 +46,7 @@ plugman install --platform android --project platforms/android --plugin https://
 
 ```
 
-- After installing the Twilio Client plugin, you will need to download and install the Twilio Client SDK for Android - follow the directions provided after plugman finishes.
+- After installing the Twilio Client plugin, you will need to download and install the Twilio Client SDK for Android - follow the directions provided after plugman finishes. Be sure to include all of the library files, or your app will crash after receiving a call.
 
 ## Additional Features
 
