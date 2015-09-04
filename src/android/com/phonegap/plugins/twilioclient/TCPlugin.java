@@ -164,7 +164,7 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 	 * @param arguments JSONArray with a Twilio capability token
 	 */
 	private void deviceSetup(JSONArray arguments,
-			CallbackContext callbackContext) {
+			final CallbackContext callbackContext) {
 		if (arguments == null || arguments.length() < 1) {
 			callbackContext.sendPluginResult(new PluginResult(
 					PluginResult.Status.ERROR));
@@ -189,7 +189,17 @@ public class TCPlugin extends CordovaPlugin implements DeviceListener,
 		LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(cordova.getActivity());
 		lbm.registerReceiver(mBroadcastReceiver, new IntentFilter(IncomingConnectionActivity.ACTION_NAME));
 		
-        deviceStatusEvent(callbackContext);
+		// delay one second to give Twilio device a change to change status (similar to iOS plugin)
+		cordova.getThreadPool().execute(new Runnable(){
+				public void run() {
+					try {
+						Thread.sleep(1000);
+						deviceStatusEvent(callbackContext);
+					} catch (InterruptedException ex) {
+						Log.e(TAG,"InterruptedException: " + ex.getMessage(),ex);
+					}
+				}
+			});
 	}
             
 	private void deviceStatusEvent(CallbackContext callbackContext) {
