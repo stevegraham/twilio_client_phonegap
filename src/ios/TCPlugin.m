@@ -16,10 +16,12 @@
     NSString     *_callback;
 }
 
-@property(nonatomic, strong) TCDevice     *device;
-@property(nonatomic, strong) NSString     *callback;
-@property(atomic, strong)    TCConnection *connection;
-@property(atomic, strong)    UILocalNotification *ringNotification;
+@property(nonatomic, strong)    TCDevice     *device;
+@property(nonatomic, strong)    NSString     *callback;
+@property(atomic, strong)       TCConnection *connection;
+@property(atomic, strong)       UILocalNotification *ringNotification;
+@property(atomic, strong)       NSTimer      *timer;
+@property (nonatomic, assign)   NSInteger    *nbRepeats;
 
 -(void)javascriptCallback:(NSString *)event;
 -(void)javascriptCallback:(NSString *)event withArguments:(NSDictionary *)arguments;
@@ -33,6 +35,7 @@
 @synthesize callback   = _callback;
 @synthesize connection = _connection;
 @synthesize ringNotification = _ringNotification;
+
 
 # pragma mark device delegate method
 
@@ -82,29 +85,52 @@
 
 -(void)deviceSetup:(CDVInvokedUrlCommand*)command {
     self.callback = command.callbackId;
-    self.device = [[TCDevice alloc] initWithCapabilityToken:[command.arguments objectAtIndex:0] delegate:self];
+    _nbRepeats = 0;
     
+    self.device = [[TCDevice alloc] initWithCapabilityToken:command.arguments[0] delegate:self];
+
     // Disable sounds. was getting EXC_BAD_ACCESS
     //self.device.incomingSoundEnabled   = NO;
     //self.device.outgoingSoundEnabled   = NO;
     //self.device.disconnectSoundEnabled = NO;
 
-    [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(deviceStatusEvent) userInfo:nil repeats:NO];
+    _timer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(deviceStatusEvent) userInfo:nil repeats:YES];
 }
 
 -(void)deviceStatusEvent {
+    
+    NSLog(@"Device state: %ld",(long) self.device.state);
+    
     switch ([self.device state]) {
+            
         case TCDeviceStateReady:
             [self javascriptCallback:@"onready"];
             NSLog(@"State: Ready");
+            
+            [_timer invalidate];
+            _timer = nil;
+            
             break;
             
         case TCDeviceStateOffline:
             [self javascriptCallback:@"onoffline"];
             NSLog(@"State: Offline");
+            
+            if ((long)_nbRepeats>20){
+                
+                [_timer invalidate];
+                _timer = nil;
+                _nbRepeats = 0;
+            }
+            else _nbRepeats++;
+            
             break;
             
         default:
+            
+            [_timer invalidate];
+            _timer = nil;
+            
             break;
     }
 }
@@ -119,6 +145,9 @@
 
 -(void)deviceStatus:(CDVInvokedUrlCommand*)command {
     NSString *state;
+    
+    NSLog(@"Device state: %ld",(long) self.device.state);
+    
     switch ([self.device state]) {
         case TCDeviceStateBusy:
             state = @"busy";
@@ -169,6 +198,7 @@
 
 -(void)connectionStatus:(CDVInvokedUrlCommand*)command {
     NSString *state;
+    
     switch ([self.connection state]) {
         case TCConnectionStateConnected:
             state = @"open";
