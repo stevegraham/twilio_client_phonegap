@@ -166,7 +166,7 @@
     }
     
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:state];    
-    [self performSelectorOnMainThread:@selector(writeJavascript:) withObject:[result toSuccessCallbackString:command.callbackId] waitUntilDone:NO];
+    [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
 }
 
 
@@ -220,12 +220,12 @@
     }
         
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:state];    
-    [self performSelectorOnMainThread:@selector(writeJavascript:) withObject:[result toSuccessCallbackString:command.callbackId] waitUntilDone:NO];
+    [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
 }
 
 -(void)connectionParameters:(CDVInvokedUrlCommand*)command {
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:[self.connection parameters]];
-    [self performSelectorOnMainThread:@selector(writeJavascript:) withObject:[result toSuccessCallbackString:command.callbackId] waitUntilDone:NO];
+    [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
 }
 
 
@@ -284,7 +284,7 @@
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:options];
     result.keepCallback     = [NSNumber numberWithBool:YES];
     
-    [self performSelectorOnMainThread:@selector(writeJavascript:) withObject:[result toSuccessCallbackString:self.callback] waitUntilDone:NO];
+    [self.commandDelegate sendPluginResult:result callbackId:self.callback];
 }
 
 -(void)javascriptCallback:(NSString *)event {
@@ -296,7 +296,7 @@
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:object];
     result.keepCallback     = [NSNumber numberWithBool:YES];
     
-    [self performSelectorOnMainThread:@selector(writeJavascript:) withObject:[result toErrorCallbackString:self.callback] waitUntilDone:NO];
+    [self.commandDelegate sendPluginResult:result callbackId:self.callback];
 }
 
 @end
