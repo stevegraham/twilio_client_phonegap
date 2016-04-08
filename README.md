@@ -12,6 +12,9 @@ These are Phonegap plugins that expose the same JS API as Twilio Client for web 
 - XCode 7.3
 - Android SDK 23
 
+# Android Marshmallow Support
+- Android Target SDK 23 does not work with version 1.0.4 of the plugin for Android 6.0 users, due to runtime permission requirements for recording audio. The plugin requires an update to support Cordova's runtime permissions model. In the meantime, use API Level 22 for your Android apps.
+
 # Example application
 https://github.com/jefflinwood/TwilioClientPhoneGapExampleApp
 
