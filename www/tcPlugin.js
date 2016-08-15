@@ -10,6 +10,7 @@
         }
     }
 
+
     TwilioPlugin.Device.prototype.setup = function(token) {
         // Take a token and instantiate a new device object
         var error = function(error) {
@@ -18,7 +19,7 @@
         }
 
         var success = function(callback) {
-            var argument = callback['arguments'] || new Twilio.Connection();
+            var argument = callback['arguments'] || new TwilioPlugin.Connection();
             if (delegate[callback['callback']]) delegate[callback['callback']](argument);
         }
 
@@ -36,7 +37,7 @@
     }
 
     TwilioPlugin.Device.prototype.disconnectAll = function() {
-        Cordova.exec('TCPlugin.disconnectAll');
+        Cordova.exec(null,null,"TCPlugin","disconnectAll",[]);
     }
 
     TwilioPlugin.Device.prototype.disconnect = function(fn) {
@@ -67,11 +68,10 @@
         delegate['onpresence'] = fn;
     }
 
-    TwilioPlugin.Device.prototype.status = function() {
-        var status = Cordova.exec("TCPlugin.deviceStatus");
+    TwilioPlugin.Device.prototype.status = function(fn) {
+        Cordova.exec(fn,null,"TCPlugin","deviceStatus",[]);
     }
 
-    // Noops until I figure out why the hell using sounds in Phonegap gives EXC_BAD_ACCESS
     TwilioPlugin.Device.prototype.sounds = {
         incoming: function(boolean) {},
         outgoing: function(boolean) {},
@@ -82,19 +82,36 @@
         if (typeof(argument) == 'function') {
             delegate['onaccept'] = argument;
         } else {
-            Cordova.exec("TCPlugin.acceptConnection");
+            Cordova.exec(null,null,"TCPlugin","acceptConnection",[]);
         }
     }
 
+    TwilioPlugin.Connection.prototype.showNotification = function(alertBody, ringSound) {
+        var args = [alertBody, ringSound];
+        if(ringSound === "undefined") {
+            args = [alertBody];
+        }    
+        Cordova.exec(null, null, "TCPlugin", "showNotification", args);
+    }
+
+    TwilioPlugin.Connection.prototype.cancelNotification = function() {
+        Cordova.exec(null, null, "TCPlugin", "cancelNotification", []);
+    }
+
+    TwilioPlugin.Connection.prototype.setSpeaker = function(mode) {
+        // "on" or "off"        
+        Cordova.exec(null, null, "TCPlugin", "setSpeaker", [mode]);
+    }
+
     TwilioPlugin.Connection.prototype.reject = function() {
-        Cordova.exec("TCPlugin.rejectConnection");
+        Cordova.exec(null,null,"TCPlugin","rejectConnection",[]);
     }
 
     TwilioPlugin.Connection.prototype.disconnect = function(fn) {
         if (typeof(argument) == 'function') {
             delegate['onconnectiondisconnect'] = argument;
         } else {
-            Cordova.exec("TCPlugin.disconnectConnection");
+            Cordova.exec(null,null,"TCPlugin","disconnectConnection",[]);
         }
     }
 
@@ -103,25 +120,29 @@
     }
 
     TwilioPlugin.Connection.prototype.mute = function() {
-        Cordova.exec("TCPlugin.muteConnection");
+        Cordova.exec(null,null,"TCPlugin","muteConnection",[]);
     }
 
     TwilioPlugin.Connection.prototype.unmute = function() {
-        Cordova.exec("TCPlugin.muteConnection");
+        Cordova.exec(null,null,"TCPlugin","muteConnection",[]);
     }
 
     TwilioPlugin.Connection.prototype.sendDigits = function(string) {
-        Cordova.exec("TCPlugin.sendDigits", string);
+        Cordova.exec(null,null,"TCPlugin","sendDigits", [string]);
     }
 
     TwilioPlugin.Connection.prototype.status = function(fn) {
         Cordova.exec(fn, null, "TCPlugin", "connectionStatus", []);
     }
+	
+	    TwilioPlugin.Connection.prototype.parameters = function(fn) {
+        Cordova.exec(fn, null, "TCPlugin", "connectionParameters", []);
+    }
 
     TwilioPlugin.install = function() {
         if (!window.Twilio) window.Twilio = {};
         if (!window.Twilio.Device) window.Twilio.Device = new TwilioPlugin.Device();
-        if (!window.Twilio.Connection) window.Twilio.Connection = TwilioPlugin.Connection;
+        if (!window.Twilio.Connection) window.Twilio.Connection = new TwilioPlugin.Connection();
     }
  TwilioPlugin.install();
 
