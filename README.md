@@ -77,8 +77,8 @@ Twilio.Connection.setSpeaker("on");
 ```
 
 ## Changelog
-1.0.7 - Added Marshmallow/SDK 23 support for runtime permissions
-1.0.6 - Updated Android platform for plugin to pull in Twilio Android SDK using Gradle
+- 1.0.7 - Added Marshmallow/SDK 23 support for runtime permissions
+- 1.0.6 - Updated Android platform for plugin to pull in Twilio Android SDK using Gradle
 
 ## Limitations
 
