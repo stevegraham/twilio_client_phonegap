@@ -1,9 +1,9 @@
-# Twilio Client Phonegap plugins for iOS and Android (version 1.0.6)
+# Twilio Client Phonegap plugins for iOS and Android (version 1.0.7)
 
 These are Phonegap plugins that expose the same JS API as Twilio Client for web as much as possible, meaning you should be able to use the same Twilio Client code from your web application inside of your Phonegap application with few if any modifications. 
 
 # Latest versions tested with this plugin
-#### (as of August 15, 2016)
+#### (as of August 16, 2016)
 - Cordova 6.3.1
 - Cordova Android 5.2.1
 - Cordova iOS 4.1.0
@@ -13,7 +13,7 @@ These are Phonegap plugins that expose the same JS API as Twilio Client for web 
 - Android SDK 23
 
 # Android Gradle Support
-- Version 1.0.6 now downloads the latest version of the Twilio SDK from jcenter - you will need to use the Cordova Android plugin 5.2.1 for this, as the version of Gradle needed is 2.1.3, and 5.2.1 also includes jcenter as a default repository. 
+- Version 1.0.6 and above now downloads the latest version of the Twilio SDK from jcenter - you will need to use the Cordova Android plugin 5.2.1 for this, as the version of Gradle needed is 2.1.3, and 5.2.1 also includes jcenter as a default repository. 
 
 # Android Support Library
 - Versions 1.0.4 and earlier of the plugin required you to include the Android support library v4 in the lib. Cordova now has a solution for requiring Android libs through Gradle dependencies. This will save you a step on installation, as well as making this plugin (as of versin 1.0.5) compatible with other plugins such as the PhoneGap Push plugin. One handy tip I found on that plugin is that you may need to update your Android support library using this command line tool, if you get an error saying that the Android Support v4 library can not be found:
@@ -21,9 +21,6 @@ These are Phonegap plugins that expose the same JS API as Twilio Client for web 
 `android update sdk --no-ui --filter "extra"`
 
 Please file an issue if you have problems with the Android support library or any compatibility issues with other plugins.
-
-# Android Marshmallow Support
-- Android Target SDK 23 does not work with version 1.0.6 of the plugin for Android 6.0 users, due to runtime permission requirements for recording audio. The plugin requires an update to support Cordova's runtime permissions model. In the meantime, use API Level 22 for your Android apps.
 
 # Example application
 https://github.com/jefflinwood/TwilioClientPhoneGapExampleApp
@@ -78,6 +75,10 @@ You can also turn the device's speaker phone on or off during a call using the f
 ```javascript
 Twilio.Connection.setSpeaker("on");
 ```
+
+## Changelog
+1.0.7 - Added Marshmallow/SDK 23 support for runtime permissions
+1.0.6 - Updated Android platform for plugin to pull in Twilio Android SDK using Gradle
 
 ## Limitations
 
