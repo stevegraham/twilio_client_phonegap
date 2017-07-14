@@ -2,7 +2,7 @@
 <plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
     xmlns:android="http://schemas.android.com/apk/res/android"
     id="com.phonegap.plugins.twilioclient"
-    version="1.0.7">
+    version="1.1.0">
 
     <name>TwilioClient</name>
     <description>Use the native Twilio Client for iOS or Android with Cordova/PhoneGap and the Twilio Client JavaScript API</description>
@@ -50,6 +50,9 @@
           </feature>
         </config-file>
 
+        <framework src="TwilioSDK" type="podspec" spec="=1.2.7" />
+
+
         <!-- Add support for background VOIP and audio to the plist -->
         <config-file target="*-Info.plist" parent="UIBackgroundModes">
             <array>
@@ -66,13 +69,5 @@
 
         <header-file src="src/ios/TCPlugin.h" />
         <source-file src="src/ios/TCPlugin.m" />
-
-        <info>
-You need to download __Twilio Client for iOS__ from https://www.twilio.com/docs/client/ios. Uncompress the download - you will need to follow a few steps that plugman can not do yet:
-
-* Add the Twilio Client static libraries (the .a files in the Libraries folder) to your Xcode project
-
-* Add the Twilio Client headers files (the .h files in the Headers folder) to your Xcode project
-        </info>
     </platform>
 </plugin>
