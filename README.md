@@ -1,15 +1,15 @@
-# Twilio Client Phonegap plugins for iOS and Android (version 1.0.7)
+# Twilio Client Phonegap plugins for iOS and Android (version 1.1.0)
 
 These are Phonegap plugins that expose the same JS API as Twilio Client for web as much as possible, meaning you should be able to use the same Twilio Client code from your web application inside of your Phonegap application with few if any modifications. 
 
 # Latest versions tested with this plugin
-#### (as of August 16, 2016)
-- Cordova 6.3.1
+#### (as of July 14, 2017)
+- Cordova 7.0.1
 - Cordova Android 5.2.1
-- Cordova iOS 4.1.0
-- Twilio Client for iOS 1.2.8
+- Cordova iOS 4.3.1
+- Twilio Client for iOS 1.2.7
 - Twilio Client for Android 1.2.17
-- XCode 7.3
+- XCode 8.3
 - Android SDK 23
 
 # Android Gradle Support
@@ -27,35 +27,11 @@ https://github.com/jefflinwood/TwilioClientPhoneGapExampleApp
 
 # PhoneGap/Cordova Overview
 
-- Install the most recent version of Cordova (as of this writing, 6.3.1 tools  - http://http://cordova.apache.org/ 
-- Install plugman - https://github.com/apache/cordova-plugman
+- Install the most recent version of Cordova (as of this writing, 7.0.1 tools  - http://http://cordova.apache.org/ 
 
-# Both Platforms at once
-
-##Instructions
+# Installation Instructions
 ```
-cordova plugin add  https://github.com/jefflinwood/twilio_client_phonegap.git
-```
-
-# iOS only
-
-##Instructions
-
-```
- plugman install --platform ios --project platforms/ios --plugin https://github.com/jefflinwood/twilio_client_phonegap.git
-
-```
-
-
-- After installing the Twilio Client plugin, you will need to download and install the Twilio Client SDK for iOS - follow the directions provided after plugman finishes.
-
-# Android only
-
-## Instructions
-
-```
-plugman install --platform android --project platforms/android --plugin https://github.com/jefflinwood/twilio_client_phonegap.git
-
+cordova plugin add twilio-client-phonegap-plugin
 ```
 
 ## Additional Features
@@ -77,10 +53,14 @@ Twilio.Connection.setSpeaker("on");
 ```
 
 ## Changelog
+- 1.1.0 - Utilize Cocoapods framework support for iOS
 - 1.0.7 - Added Marshmallow/SDK 23 support for runtime permissions
 - 1.0.6 - Updated Android platform for plugin to pull in Twilio Android SDK using Gradle
 
 ## Limitations
+
+The current version of the Twilio Client SDK requires iOS 8.1, but the Cocoapods support in Cordova iOS is 
+hardcoded to iOS 8.0. Will need to get this addressed in the cordova-ios project.
 
 This is plugin is a first cut and should be considered alpha. Please use it and break it :) Report any issues using the Github issue tracker.
 
