@@ -1,4 +1,4 @@
-# Twilio Client Phonegap plugins for iOS and Android (version 1.1.0)
+# Twilio Client Phonegap plugins for iOS and Android (version 1.1.1)
 
 These are Phonegap plugins that expose the same JS API as Twilio Client for web as much as possible, meaning you should be able to use the same Twilio Client code from your web application inside of your Phonegap application with few if any modifications. 
 
@@ -53,6 +53,7 @@ Twilio.Connection.setSpeaker("on");
 ```
 
 ## Changelog
+- 1.1.1 - Fixed Twilio Connection disconnect argument in Javascript file.
 - 1.1.0 - Utilize Cocoapods framework support for iOS
 - 1.0.7 - Added Marshmallow/SDK 23 support for runtime permissions
 - 1.0.6 - Updated Android platform for plugin to pull in Twilio Android SDK using Gradle

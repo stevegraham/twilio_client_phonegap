@@ -1,6 +1,6 @@
 {
   "name": "twilio-client-phonegap-plugin",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Use the Twilio Client SDK for iOS or Android VoIP support with Cordova/PhoneGap.",
   "cordova": {
     "id": "com.phonegap.plugins.twilioclient",

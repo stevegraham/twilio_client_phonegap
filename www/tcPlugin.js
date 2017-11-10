@@ -107,7 +107,7 @@
         Cordova.exec(null,null,"TCPlugin","rejectConnection",[]);
     }
 
-    TwilioPlugin.Connection.prototype.disconnect = function(fn) {
+    TwilioPlugin.Connection.prototype.disconnect = function(argument) {
         if (typeof(argument) == 'function') {
             delegate['onconnectiondisconnect'] = argument;
         } else {
