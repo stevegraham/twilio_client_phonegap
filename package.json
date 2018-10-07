@@ -1,0 +1,41 @@
+{
+  "name": "twilio-client-phonegap-plugin",
+  "version": "1.1.1",
+  "description": "Use the Twilio Client SDK for iOS or Android VoIP support with Cordova/PhoneGap.",
+  "cordova": {
+    "id": "com.phonegap.plugins.twilioclient",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jefflinwood/twilio_client_phonegap.git"
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=6.4.0"
+    },
+    {
+      "name": "cordova-android",
+      "version": ">=6.0.0"
+    },
+    {
+      "name": "cordova-ios",
+      "version": ">=4.3.0"
+    }
+  ],
+  "author": "Stevie Graham/Lyle Pratt/Jeff Linwood",
+  "license": "Apache",
+  "bugs": {
+    "url": "https://github.com/jefflinwood/twilio_client_phonegap/issues"
+  },
+  "homepage": "https://github.com/jefflinwood/twilio_client_phonegap#readme"
+}
